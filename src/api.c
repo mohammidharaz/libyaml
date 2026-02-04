@@ -1391,3 +1391,4 @@ yaml_document_append_mapping_pair(yaml_document_t *document,
 }
 
 
+// harden realloc overflow guard
