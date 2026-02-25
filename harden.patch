@@ -1,0 +1,13 @@
+--- a/src/api.c
++++ b/src/api.c
+@@
+-    yaml_char_t *new_start = (yaml_char_t *)yaml_realloc((void*)*start, (*end - *start)*2);
++    size_t current = (size_t)(*end - *start);
++    size_t new_size;
++    if (__builtin_mul_overflow(current, 2, &new_size)) {
++        return 0;
++    }
++    yaml_char_t *new_start = (yaml_char_t *)yaml_realloc((void*)*start, new_size);
+@@
+-    *end = new_start + (*end - *start)*2;
++    *end = new_start + new_size;

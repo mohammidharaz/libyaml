@@ -1,0 +1,5 @@
+- name: Run test suite
+  run: |
+    # git branch --track run-test-suite origin/run-test-suite
+    # git worktree add tests/run-test-suite run-test-suite
+    make tests/run-test-suite
