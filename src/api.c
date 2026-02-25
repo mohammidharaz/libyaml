@@ -1,5 +1,6 @@
 
 #include "yaml_private.h"
+#include <stdint.h>
 
 /*
  * Get the library version.
@@ -74,14 +75,14 @@ YAML_DECLARE(int)
 yaml_string_extend(yaml_char_t **start,
         yaml_char_t **pointer, yaml_char_t **end)
 {
-    yaml_char_t *new_start = (yaml_char_t *)yaml_realloc((void*)*start, (*end - *start)*2);
+    yaml_char_t *new_start = (yaml_char_t *)yaml_realloc((void*)*start, (((*end - *start) > SIZE_MAX/2) ? 0 : (*end - *start)*2));
 
     if (!new_start) return 0;
 
     memset(new_start + (*end - *start), 0, *end - *start);
 
     *pointer = new_start + (*pointer - *start);
-    *end = new_start + (*end - *start)*2;
+    *end = new_start + (((*end - *start) > SIZE_MAX/2) ? 0 : (*end - *start)*2);
     *start = new_start;
 
     return 1;
@@ -123,12 +124,12 @@ yaml_stack_extend(void **start, void **top, void **end)
     if ((char *)*end - (char *)*start >= INT_MAX / 2)
 	return 0;
 
-    new_start = yaml_realloc(*start, ((char *)*end - (char *)*start)*2);
+    new_start = yaml_realloc(*start, ((((char *)*end - (char *)*start) > SIZE_MAX/2) ? 0 : ((char *)*end - (char *)*start)*2));
 
     if (!new_start) return 0;
 
     *top = (char *)new_start + ((char *)*top - (char *)*start);
-    *end = (char *)new_start + ((char *)*end - (char *)*start)*2;
+    *end = (char *)new_start + ((((char *)*end - (char *)*start) > SIZE_MAX/2) ? 0 : ((char *)*end - (char *)*start)*2);
     *start = new_start;
 
     return 1;
@@ -145,13 +146,13 @@ yaml_queue_extend(void **start, void **head, void **tail, void **end)
 
     if (*start == *head && *tail == *end) {
         void *new_start = yaml_realloc(*start,
-                ((char *)*end - (char *)*start)*2);
+                ((((char *)*end - (char *)*start) > SIZE_MAX/2) ? 0 : ((char *)*end - (char *)*start)*2));
 
         if (!new_start) return 0;
 
         *head = (char *)new_start + ((char *)*head - (char *)*start);
         *tail = (char *)new_start + ((char *)*tail - (char *)*start);
-        *end = (char *)new_start + ((char *)*end - (char *)*start)*2;
+        *end = (char *)new_start + ((((char *)*end - (char *)*start) > SIZE_MAX/2) ? 0 : ((char *)*end - (char *)*start)*2);
         *start = new_start;
     }
 
