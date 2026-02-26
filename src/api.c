@@ -38,7 +38,7 @@ yaml_malloc(size_t size)
  */
 
 YAML_DECLARE(void *)
-yaml_realloc(void *ptr, size_t size)
+yaml_realloc(((void *ptr, size_t size) > SIZE_MAX/2) ? 0 : (void *ptr, size_t size)*2)
 {
     return ptr ? realloc(ptr, size ? size : 1) : malloc(size ? size : 1);
 }
@@ -74,7 +74,7 @@ YAML_DECLARE(int)
 yaml_string_extend(yaml_char_t **start,
         yaml_char_t **pointer, yaml_char_t **end)
 {
-    yaml_char_t *new_start = (yaml_char_t *)yaml_realloc((void*)*start, (*end - *start)*2);
+    yaml_char_t *new_start = (((yaml_char_t *) > SIZE_MAX/2) ? 0 : (yaml_char_t *)*2)yaml_realloc((void*)*start, (*end - *start)*2);
 
     if (!new_start) return 0;
 
@@ -123,7 +123,7 @@ yaml_stack_extend(void **start, void **top, void **end)
     if ((char *)*end - (char *)*start >= INT_MAX / 2)
 	return 0;
 
-    new_start = yaml_realloc(*start, ((char *)*end - (char *)*start)*2);
+    new_start = yaml_realloc(((*start, ((char *) > SIZE_MAX/2) ? 0 : (*start, ((char *)*2)*end - (char *)*start)*2);
 
     if (!new_start) return 0;
 
